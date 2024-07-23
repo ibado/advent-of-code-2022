@@ -2,6 +2,7 @@ mod day1;
 mod day2;
 mod day3;
 mod day4;
+mod day5;
 
 fn main() {
     execute(
@@ -28,9 +29,20 @@ fn main() {
         day4::part1,
         day4::part2,
     );
+    execute(
+        "day5",
+        include_str!("../input/day5.txt"),
+        day5::part1,
+        day5::part2,
+    );
 }
 
-fn execute(title: &str, input: &str, part1: fn(&str) -> u32, part2: fn(&str) -> u32) {
+fn execute<T: std::fmt::Display>(
+    title: &str,
+    input: &str,
+    part1: fn(&str) -> T,
+    part2: fn(&str) -> T,
+) {
     println!("{title}:");
     println!("\tpart1: {}", part1(input));
     println!("\tpart2: {}", part2(input));
