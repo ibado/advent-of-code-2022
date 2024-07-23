@@ -1,6 +1,7 @@
 mod day1;
 mod day2;
 mod day3;
+mod day4;
 
 fn main() {
     execute(
@@ -20,6 +21,12 @@ fn main() {
         include_str!("../input/day3.txt"),
         day3::part1,
         day3::part2,
+    );
+    execute(
+        "day4",
+        include_str!("../input/day4.txt"),
+        day4::part1,
+        day4::part2,
     );
 }
 
