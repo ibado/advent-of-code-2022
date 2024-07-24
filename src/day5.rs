@@ -1,6 +1,40 @@
 use std::collections::VecDeque;
 
 pub fn part1(input: &str) -> String {
+    let (moves, mut stacks) = parse_input(input);
+
+    for (q, from, to) in moves {
+        for _ in 0..q {
+            let elem = stacks[from as usize - 1].pop_front().unwrap();
+            stacks[to as usize - 1].push_front(elem);
+        }
+    }
+
+    stacks_to_str(stacks)
+}
+
+pub fn part2(input: &str) -> String {
+    let (moves, mut stacks) = parse_input(input);
+
+    let mut aux_stack = Vec::new();
+    for (q, from, to) in moves {
+        for _ in 0..q {
+            let elem = stacks[from as usize - 1].pop_front().unwrap();
+            aux_stack.push(elem);
+        }
+        for _ in 0..q {
+            let elem = aux_stack.pop().unwrap();
+            stacks[to as usize - 1].push_front(elem);
+        }
+        aux_stack.clear();
+    }
+
+    stacks_to_str(stacks)
+}
+
+type Moves = Vec<(u32, u32, u32)>;
+
+fn parse_input(input: &str) -> (Moves, Vec<VecDeque<char>>) {
     let v: Vec<&str> = input.split("\n\n").collect();
     let map = v[0];
     let moves: Vec<(u32, u32, u32)> = v[1]
@@ -39,24 +73,16 @@ pub fn part1(input: &str) -> String {
             }
         }
     }
+    (moves, stacks)
+}
 
-    for (q, from, to) in moves {
-        for _ in 0..q {
-            let elem = stacks[from as usize - 1].pop_front().unwrap();
-            stacks[to as usize - 1].push_front(elem);
-        }
-    }
-
+fn stacks_to_str(stacks: Vec<VecDeque<char>>) -> String {
     let mut result = String::new();
     for mut s in stacks {
         result.push(s.pop_front().unwrap());
     }
 
     result
-}
-
-pub fn part2(input: &str) -> String {
-    "".to_string()
 }
 
 #[cfg(test)]
@@ -76,5 +102,20 @@ move 2 from 2 to 1
 move 1 from 1 to 2";
 
         assert_eq!(part1(input), "CMZ")
+    }
+
+    #[test]
+    fn part2_test_input() {
+        let input = "    [D]
+[N] [C]
+[Z] [M] [P]
+ 1   2   3
+
+move 1 from 2 to 1
+move 3 from 1 to 3
+move 2 from 2 to 1
+move 1 from 1 to 2";
+
+        assert_eq!(part2(input), "MCD")
     }
 }
